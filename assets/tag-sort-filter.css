@@ -1,0 +1,18 @@
+.tag-filter ul{
+  gap:20px;
+}
+.tag-filter ul li span, .sort-by label {
+  font-weight: 600;
+}
+.sort-by #ProductCount{
+  text-transform:capitalize; 
+}
+.tag-filter ul li a:focus{
+  box-shadow: unset;
+}
+.tag-filter ul li a:hover{
+  border: 1px solid #000 !important;
+}
+.tag-filter ul li a.active{
+  border: 1px solid #ca1515 !important;
+}

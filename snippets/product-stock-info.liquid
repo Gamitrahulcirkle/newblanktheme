@@ -1,0 +1,10 @@
+<div class="prInfoRow">
+  <div class="product-stock" data-stock-info-{{ section.id }}>
+    {%- if current_variant.available -%}
+      <span class="instock">In Stock</span>
+    {%- else -%}
+      <span class="outstock">Out Of Stock</span>
+    {%- endif %}
+  </div>
+  <div class="product-sku">SKU: <span class="variant-sku">19115-rdxs</span></div>
+</div>

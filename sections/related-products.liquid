@@ -1,0 +1,50 @@
+<div
+  class="container product-recommendations"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit_products }}&intent=related"
+  data-section-type="related-products"
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    {% if section.settings.section_heading != blank %}
+      <div class="section-title">
+        <h4>{{ section.settings.section_heading }}</h4>
+      </div>
+    {% endif %}
+    <div class="row">
+      {%- for product in recommendations.products -%}
+        {%- render 'product-card', product: product, section_id: section.id -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+{% schema %}
+{
+  "name": "Related Products",
+  "tag": "section",
+  "class": "recommendation spad",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "limit_products",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show"
+    },
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,153 @@
+<div class="cart-item border-bottom" data-item-list>
+  <div class="row align-items-center">
+    <a href="{{- item.url -}}" class="col-3">
+      {%- if item.image -%}
+        <img
+          src="{{ item.image | image_url: width: 300 }}"
+          alt="{{ item.image.alt | escape }}"
+          loading="lazy"
+          width="150"
+          height="{{ 150 | divided_by: item.image.aspect_ratio | ceil }}"
+          class="item-image rounded shadow-sm"
+        >
+      {%- else -%}
+        {{- 'image' | placeholder_svg_tag -}}
+      {%- endif -%}
+    </a>
+    <div class="col-9">
+      <a href="{{ item.url }}" class="product-single__title">{{- item.product.title | escape -}}</a>
+      <p class="product-single__price">
+        {%- if item.original_price != item.final_price -%}
+          <s id="ComparePrice">{{- item.original_price | money -}}</s>
+        {%- endif %}
+        <span class="price__sale">{{ item.final_price | money }}</span>
+      </p>
+
+      {%- if item.product.has_only_default_variant == false
+        or item.properties.size != 0
+        or item.selling_plan_allocation != null
+      -%}
+        {%- if item.product.has_only_default_variant == false -%}
+          {%- for option in item.options_with_values -%}
+            <div class="cart-options">
+              <label class="m-0">
+                {{ option.name }}:
+                <span>{{ option.value -}}</span>
+              </label>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- if item.selling_plan_allocation -%}
+          <p class="cart-options m-0">
+            Months: {{ item.quantity }} Month{% if item.quantity > 1 %}s{% endif %}
+          </p>
+          <p class="cart-options m-0 text-capitalize">
+            {%- if item.selling_plan_allocation.selling_plan.name contains 'month' -%}
+              Ship every
+              {{- item.selling_plan_allocation.selling_plan.name | split: ',' | first | split: 'every' | last -}}
+            {%- else -%}
+              {{- item.selling_plan_allocation.selling_plan.name -}}
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+
+        {%- for property in item.properties -%}
+          {%- assign property_first_char = property.first | slice: 0 -%}
+          {%- if property.last != blank and property_first_char != '_' -%}
+            <div class="cart-options">
+              <label class="m-0">
+                {{ property.first }}:
+                <span>
+                  {%- if property.last contains '/uploads/' -%}
+                    <a
+                      href="{{ property.last }}"
+                      class="link"
+                      target="_blank"
+                      aria-describedby="a11y-new-window-message"
+                    >
+                      {{ property.last | split: '/' | last }}
+                    </a>
+                  {%- else -%}
+                    {{ property.last }}
+                  {%- endif -%}
+                </span>
+              </label>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="wrapQtyBtn">
+          <div class="qtyField">
+            <button name="minus" type="button" class="qtyBtn minus">-</button>
+            <input
+              type="number"
+              id="Quantity"
+              name="updates[]"
+              class="qty"
+              data-id="{{- item.index | plus: 1 -}}"
+              data-cart-quantity="{{- cart | item_count_for_variant: item.variant.id -}}"
+              min="0"
+              data-min="{{ item.variant.quantity_rule.min }}"
+              {% if item.variant.quantity_rule.max != null %}
+                max="{{ item.variant.quantity_rule.max }}"
+              {% endif %}
+              step="{{ item.variant.quantity_rule.increment }}"
+              value="{{- item.quantity -}}"
+              data-quantity-variant-id="{{- item.variant.id -}}"
+              data-section-id="{{- section.id -}}"
+              readonly
+            >
+            <button name="plus" type="button" class="qtyBtn plus">+</button>
+          </div>
+        </div>
+        <button class="btn btn-link text-danger remove-item p-0" data-cart-delete>X</button>
+      </div>
+    </div>
+    {%- if item.selling_plan_allocation -%}
+      <div class="col-12 cart-items-button mt-3">
+        <select class="ct-selector" name="update_selling_plan">
+          <optgroup label="Full price">
+            <option
+              data-plan-name="One-time Purchase"
+              value=""
+            >
+              One-time purchase
+            </option>
+          </optgroup>
+          <optgroup label="Subscription Plans">
+            {%- for allocation in item.variant.selling_plan_allocations -%}
+              <option
+                data-plan-name="{{- allocation.selling_plan.name -}}"
+                value="{{- allocation.selling_plan.id -}}"
+                price="{{- allocation.price -}}"
+                {% if allocation.selling_plan.id == item.selling_plan_allocation.selling_plan.id %}
+                  selected
+                {% endif %}
+              >
+                {{- allocation.selling_plan.name -}}
+              </option>
+            {%- endfor -%}
+          </optgroup>
+        </select>
+      </div>
+    {%- elsif item.product.selling_plan_groups.size > 0 -%}
+      {%- liquid
+        assign current_var = item.product.selected_or_first_available_variant
+        assign current_plan_price = current_var.selling_plan_allocations[0].price
+        assign current_plan_compare_at_price = current_var.selling_plan_allocations[0].compare_at_price
+        assign percent_off = current_plan_compare_at_price | minus: current_plan_price | times: 100.0 | divided_by: current_plan_compare_at_price | round | append: '%'
+      -%}
+      <div class="col-12 cart-items-button mt-3">
+        <button
+          class="btn btn-sm btn-outline-primary rounded-pill w-100 upgrade_selling_plan"
+          data-subscription-id="{{- item.product.selling_plan_groups[0].selling_plans[0].id -}}"
+        >
+          {{- 'products.product.cart_subscribe' | t: percentage: percent_off -}}
+        </button>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

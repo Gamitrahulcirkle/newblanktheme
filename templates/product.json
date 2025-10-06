@@ -1,0 +1,85 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title_xikfxY": {
+          "type": "title",
+          "settings": {}
+        },
+        "stock_info_7RfDQX": {
+          "type": "stock-info",
+          "settings": {}
+        },
+        "price_E4wAKn": {
+          "type": "price",
+          "settings": {}
+        },
+        "description_kxkeLJ": {
+          "type": "description",
+          "settings": {}
+        },
+        "quantity_message_XgrUgJ": {
+          "type": "quantity-message",
+          "settings": {}
+        },
+        "timer_progress_yWwBGh": {
+          "type": "timer-progress",
+          "settings": {}
+        },
+        "variant_picker_hUHzTy": {
+          "type": "variant-picker",
+          "settings": {}
+        },
+        "subscriptions_a89XbJ": {
+          "type": "subscriptions",
+          "settings": {}
+        },
+        "quantity_selector_hma3tY": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons_x8HhFk": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "payment_terms": true,
+            "show_subscription": false,
+            "subscription_points": ""
+          }
+        }
+      },
+      "block_order": [
+        "title_xikfxY",
+        "stock_info_7RfDQX",
+        "price_E4wAKn",
+        "description_kxkeLJ",
+        "quantity_message_XgrUgJ",
+        "timer_progress_yWwBGh",
+        "variant_picker_hUHzTy",
+        "subscriptions_a89XbJ",
+        "quantity_selector_hma3tY",
+        "buy_buttons_x8HhFk"
+      ],
+      "settings": {}
+    },
+    "related_products_pKKp3W": {
+      "type": "related-products",
+      "name": "Related Products",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "related_products_pKKp3W"
+  ]
+}

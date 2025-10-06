@@ -1,0 +1,111 @@
+{%- if section.blocks.size > 0 -%}
+  <div class="container-fluid" data-section-type="main-banner">
+    <div class="row">
+      {%- assign categories_blocks = section.blocks | where: 'type', 'category' -%}
+      {%- assign content = 'Sitamet, consectetur adipiscing elit, sed do eiusmod tempor incidid-unt labore edolore magna aliquapendisse ultrices gravida.' -%}
+      {%- assign first_block = categories_blocks[0] -%}
+
+      {%- if first_block -%}
+        <div class="col-lg-6 p-0">
+          <div
+            class="categories__item categories__large__item set-bg"
+            data-setbg="{{- first_block.settings.image.src | image_url -}}"
+          >
+            <div class="categories__text">
+              {%- if first_block.settings.heading != blank -%}
+                <h1>{{- first_block.settings.heading -}}</h1>
+              {%- endif -%}
+              {{- first_block.settings.paragraph | default: content -}}
+              {%- if first_block.settings.button_url != blank and first_block.settings.button_text != blank -%}
+                <a href="{{- first_block.settings.button_url -}}">{{- first_block.settings.button_text -}}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="col-lg-6">
+        <div class="row">
+          {%- for block in categories_blocks offset: 1 -%}
+            <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+              <div
+                class="categories__item set-bg"
+                data-setbg="{{- block.settings.image.src | image_url -}}"
+              >
+                <div class="categories__text">
+                  {%- if block.settings.heading != blank -%}
+                    <h4>{{- block.settings.heading -}}</h4>
+                  {%- endif -%}
+                  <p>{{- block.settings.paragraph | truncatewords: 2 -}}</p>
+                  {%- if block.settings.button_url != blank and block.settings.button_text != blank -%}
+                    <a href="{{- block.settings.button_url -}}">{{- block.settings.button_text -}}</a>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+{% javascript %}
+  $(document).on('shopify:section:load shopify:section:unload shopify:section:reorder shopify:section:select shopify:section:deselect', function() {
+     window.setBg();
+  });
+{% endjavascript %}
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "section",
+  "class": "categories",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "paragraph",
+          "label": "Paragraph"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner",
+      "blocks": [
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

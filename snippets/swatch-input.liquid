@@ -1,0 +1,38 @@
+{%- liquid
+  assign swatch_value = null
+  if swatch.image
+    assign image_url = swatch.image | image_url: width: 50
+    assign swatch_value = 'url(' | append: image_url | append: ')'
+  elsif swatch.color
+    assign swatch_value = 'rgb(' | append: swatch.color.rgb | append: ')'
+  endif
+-%}
+<div class="swatch-element">
+  <input
+    type="{{ type | default: 'radio' }}"
+    id="{{ id }}"
+    name="{{ name }}"
+    value="{{ value }}"
+    form="{{ product_form_id }}"
+    class="swatch-input__input{% if visually_disabled %} visually-disabled{% endif %}"
+    {% if checked %}
+      checked
+    {% endif %}
+    {% if disabled %}
+      disabled
+    {% endif %}
+    {% if additional_props %}
+      {{ additional_props }}
+    {% endif %}
+  >
+  <label
+    for="{{ id }}"
+    title="{{ value }}"
+    class="swatch-input__label {% if swatch_value %}color{% endif %}"
+    {% if swatch_value %}
+      style="background: {{ swatch_value }};"
+    {% endif %}
+  >
+    {% if picker_type != 'swatch' %}{{ value }}{% endif %}
+  </label>
+</div>

@@ -1,0 +1,101 @@
+<div class="shop__sidebar">
+  {%- for filter in results.filters -%}
+    <div class="{%- if filter.type == 'list' or filter.type == 'boolean' -%}sidebar__sizes{%- elsif filter.type == 'price_range' -%}sidebar__filter{%- endif -%}">
+      <div class="section-title">
+        <h4>
+          {% if filter.label != 'Women' %} Shop by {{ filter.label }}{% else %} Categories{% endif %}
+        </h4>
+      </div>
+
+      {%- if filter.label == 'Women' and filter.type == 'list' -%}
+        {% render 'categories-accordion-filter', filter: filter %}
+      {%- else -%}
+        {% case filter.type %}
+          {% when 'boolean', 'list' %}
+            <div class="size__list">
+              {%- for filter_value in filter.values -%}
+                <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="{%- if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif -%}">
+                  {{- filter_value.label -}}
+                  <input
+                    type="checkbox"
+                    id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                    name="{{ filter_value.param_name }}"
+                    value="{{ filter_value.value }}"
+                    {%- if filter_value.active -%}
+                      checked
+                    {%- endif -%}
+                    {%- if filter_value.count == 0 and filter_value.active == false -%}
+                      disabled
+                    {%- endif -%}
+                  >
+                  <span class="checkmark"></span>
+                </label>
+              {%- endfor -%}
+            </div>
+          {% when 'price_range' %}
+            {{ 'price-range-slider.css' | asset_url | stylesheet_tag }}
+            <div class="main-filter-price">
+              <div class="input-slider">
+                <div class="input-progress"></div>
+              </div>
+              <div class="range-input position-relative">
+                <input
+                  type="range"
+                  name="{{ filter.min_value.param_name }}"
+                  id="min_price"
+                  class="range-min"
+                  {%- if filter.min_value.value -%}
+                    value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                  {%- else -%}
+                    value="0"
+                  {%- endif -%}
+                  min="0"
+                  max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                  step="1"
+                  placeholder="0"
+                >
+
+                <input
+                  type="range"
+                  name="{{ filter.max_value.param_name }}"
+                  id="max_price"
+                  class="range-max"
+                  {%- if filter.max_value.value -%}
+                    value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                  {%- else -%}
+                    value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                  {%- endif -%}
+                  min="0"
+                  placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                  max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                  step="1"
+                >
+              </div>
+            </div>
+            <div class="price-display">
+              <div>
+                <b>{{ cart.currency.symbol }}</b>
+                <span class="min-price-display">
+                  {%- if filter.min_value.value -%}
+                    {{ filter.min_value.value | money_without_currency | replace: ',', '' | replace: '.00', '' }}
+                  {%- else -%}
+                    0
+                  {%- endif -%}
+                </span>
+              </div>
+              <div>
+                <b>{{ cart.currency.symbol }}</b>
+                <span class="max-price-display">
+                  {%- if filter.max_value.value -%}
+                    {{ filter.max_value.value | money_without_currency | replace: ',', '' | replace: '.00', '' }}
+                  {%- else -%}
+                    {{ filter.range_max | money_without_currency | replace: ',', '' | replace: '.00', '' }}
+                  {%- endif -%}
+                </span>
+              </div>
+            </div>
+        {% endcase %}
+      {%- endif -%}
+    </div>
+  {%- endfor -%}
+</div>

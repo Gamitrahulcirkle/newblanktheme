@@ -1,0 +1,135 @@
+{% style %}
+/* product card swatch css */
+  .swatches {
+      margin: 8px 0 0;
+      list-style: none;
+      padding: 0;
+  }
+  .swatches li.medium {
+      height: 30px;
+      width: 30px;
+  }
+   .swatches li {
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin: 3px 1px;
+    cursor: pointer;
+    box-shadow: 0 0 1px 1px #ddd;
+    -webkit-box-shadow: 0 0 1px 1px #ddd;
+  }
+  .swatches li img {
+    display: block;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    max-height: 30px;
+    margin: 0 auto;
+  }
+{% endstyle %}
+<div class="col-lg-3 col-md-4 col-sm-6 {% if template == 'index' %}mix {{ collection.title | handleize }}{% endif %}">
+  <div class="product__item">
+    <div class="product__item__pic set-bg" data-setbg="{{- product.featured_image.src | image_url -}}">
+      {%- render 'product-label', product: product -%}
+      <ul class="product__hover">
+        <li>
+          {% comment %}
+            <a href="{{- product.featured_image.src | image_url -}}" class="image-popup"
+              ><span class="arrow_expand"></span
+            ></a>
+          {% endcomment %}
+          <button class="quick-view-popup" data-target="#content_quickview" data-product-handle="{{ product.handle }}">
+            <span class="arrow_expand"></span>
+          </button>
+        </li>
+        <li>
+          {% comment %}
+             <!-- Swym Wishlist Plus EPI Button with default first variant -->
+              <button
+                aria-label="Add to Wishlist"
+                data-with-epi="true"
+                class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}"
+                data-swaction="addToWishlist"
+                data-product-id="{{ product.id | json }}"
+                data-variant-id="{{ product.variants[0].id }}"
+                data-product-url="{{ shop.url }}{{ product.url }}"
+              ></button>
+            <!-- Swym Wishlist Plus EPI Button -->
+          {% endcomment %}
+          <a href="#"><span class="icon_heart_alt"></span></a>
+        </li>
+
+        <li>
+          {%- assign product_form_id = 'quick-add-' | append: section_id | append: '-' | append: product.id -%}
+          {%- form 'product',
+            product,
+            id: product_form_id,
+            class: 'form',
+            novalidate: 'novalidate',
+            data-type: 'add-to-cart-form',
+            data-form: 'product-card-page'
+          -%}
+            <input
+              type="hidden"
+              name="id"
+              value="{{ product.selected_or_first_available_variant.id }}"
+              class="product-variant-id"
+              {% if product.selected_or_first_available_variant.available == false %}
+                disabled
+              {% endif %}
+            >
+            <button
+              id="{{ product_form_id }}-submit"
+              type="submit"
+              name="add"
+              aria-haspopup="dialog"
+              aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ product.id }}"
+              aria-live="polite"
+              {% if product.selected_or_first_available_variant.available == false %}
+                disabled
+              {% endif %}
+              data-section-id="cart-drawer"
+              data-add-to-cart
+            >
+              <span class="icon_bag_alt"></span>
+            </button>
+          {%- endform -%}
+        </li>
+      </ul>
+    </div>
+    <div class="product__item__text">
+      <h6>
+        <a href="{{- product.url | within: collection -}}">{{- product.title -}}</a>
+      </h6>
+      <div class="rating">
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+        <i class="fa fa-star"></i>
+      </div>
+      <div class="product__price">{{- product.price | money -}}</div>
+      {% comment %}
+        <ul class="swatches">
+          <li class="swatch medium square">
+            <img src="https://cdn.shopify.com/s/files/1/0875/1434/9862/files/variant1.jpg?v=1740045784" alt="image">
+          </li>
+          <li class="swatch medium square">
+            <img src="https://cdn.shopify.com/s/files/1/0875/1434/9862/files/variant1.jpg?v=1740045784" alt="image">
+          </li>
+          <li class="swatch medium square">
+            <img src="https://cdn.shopify.com/s/files/1/0875/1434/9862/files/variant1.jpg?v=1740045784" alt="image">
+          </li>
+          <li class="swatch medium square">
+            <img src="https://cdn.shopify.com/s/files/1/0875/1434/9862/files/variant1.jpg?v=1740045784" alt="image">
+          </li>
+          <li class="swatch medium square">
+            <img src="https://cdn.shopify.com/s/files/1/0875/1434/9862/files/variant1.jpg?v=1740045784" alt="image">
+          </li>
+          <li class="swatch medium square">
+            <img src="https://cdn.shopify.com/s/files/1/0875/1434/9862/files/variant1.jpg?v=1740045784" alt="image">
+          </li>
+        </ul>
+      {% endcomment %}
+    </div>
+  </div>
+</div>

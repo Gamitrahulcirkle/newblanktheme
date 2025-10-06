@@ -1,0 +1,21 @@
+<div class="product-form__item--quantity" {{ block.shopify_attributes }}>
+  <div class="wrapQtyBtn">
+    <div class="qtyField">
+      <button name="minus" type="button" class="qtyBtn minus">-</button>
+      <input
+        type="text"
+        id="Quantity"
+        name="quantity"
+        min="{{- current_variant.quantity_rule.min -}}"
+        {% if current_variant.quantity_rule.max != null %}
+          max="{{ current_variant.quantity_rule.max }}"
+        {% endif %}
+        step="{{ current_variant.quantity_rule.increment }}"
+        value="{{- current_variant.quantity_rule.min -}}"
+        form="{{ product_form_id }}"
+        class="product-form__input qty"
+      >
+      <button name="plus" type="button" class="qtyBtn plus">+</button>
+    </div>
+  </div>
+</div>

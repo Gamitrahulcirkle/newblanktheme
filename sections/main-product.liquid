@@ -1,0 +1,191 @@
+{{ 'main-product.css' | asset_url | stylesheet_tag }}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign current_alt = product.selected_or_first_available_variant.featured_media.alt
+  assign matching_media = product.media | where: 'alt', current_alt
+  assign product_form_id = 'product-form-' | append: section.id
+  assign buy_buttons_block = section.blocks | where: 'type', 'buy_buttons'
+-%}
+
+<div class="container" data-section-type="main-product">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="product__details__pic" data-product-media-{{ section.id }} data-product-media>
+        {%- render 'product-media', product: product, matching_media: matching_media -%}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="product-single__meta" data-product-info>
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {%- render block -%}
+
+            {%- when 'title' -%}
+              <h2 class="product-single__title" {{ block.shopify_attributes }}>{{ product.title }}</h2>
+
+            {%- when 'stock-info' -%}
+              {% render 'product-stock-info', current_variant: current_variant, section: section %}
+
+            {%- when 'price' -%}
+              {% render 'price', product: product, current_variant: current_variant, section: section, block: block %}
+
+            {%- when 'description' -%}
+              <p class="product-single__description">
+                Belle Multipurpose Bootstrap 4 Html Template that will give you and your customers a smooth shopping
+                experience which can be used for various kinds of stores such as fashion,...
+              </p>
+
+            {%- when 'quantity-message' -%}
+              <div id="quantity_message">Hurry! Only <span class="items">4</span> left in stock.</div>
+
+            {%- when 'timer-progress' -%}
+              <!-- countdown start -->
+              <div class="saleTime product-countdown" data-countdown="2022/03/01">
+                <span class="ht-count days"
+                  ><span class="count-inner"><span class="time-count">0</span> <span>Days</span></span></span
+                >
+                <span class="ht-count hour"
+                  ><span class="count-inner"><span class="time-count">0</span> <span>HR</span></span></span
+                >
+                <span class="ht-count minutes"
+                  ><span class="count-inner"><span class="time-count">00</span> <span>Min</span></span></span
+                >
+                <span class="ht-count second"
+                  ><span class="count-inner"><span class="time-count">00</span> <span>Sc</span></span></span
+                >
+              </div>
+              <!-- countdown End -->
+            {%- when 'variant-picker' -%}
+              {% render 'product-variant-picker', product: product, block: block, change_url: true %}
+
+            {%- when 'subscriptions' -%}
+              {% render 'product-subscriptions', current_variant: current_variant, section: section, product_form_id: product_form_id, block: block %}
+        
+            {%- when 'quantity_selector' -%}
+              {% render 'quantity-selector', current_variant: current_variant, section: section, product_form_id: product_form_id, block: block %}
+        
+            {%- when 'buy_buttons' -%}
+              {% render 'buy-buttons', section: section, product: product, product_form_id: product_form_id, block: block, current_variant: current_variant %}
+            
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    lightbox.option({
+      'resizeDuration': 200,
+      'wrapAround': true
+    })
+</script>
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "product-details spad",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "stock-info",
+      "name": "Stock Info",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "star-ratings",
+      "name": "Ratings",
+      "limit": 1
+    },
+    {
+      "type": "quantity-message",
+      "name": "Quantity Message",
+      "limit": 1
+    },
+    {
+      "type": "timer-progress",
+      "name": "Timer & Progress bar",
+      "limit": 1
+    },
+    {
+      "type": "variant-picker",
+      "name": "Variant Picker",
+      "limit": 1
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Liquid code",
+          "info": "Add app snippets or other code to create advanced customizations. [Learn more](https://shopify.dev/docs/api/liquid)"
+        }
+      ]
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity Selector",
+      "limit": 1
+    },
+    {
+      "type": "subscriptions",
+      "name": "Subscriptions",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "default": true,
+          "label": "Dynamic checkout buttons",
+          "info": "Using the payment methods available on your store, customers see their preferred option, like PayPal or Apple Pay. [Learn more](https:\/\/help.shopify.com\/manual\/using-themes\/change-the-layout\/dynamic-checkout)"
+        },
+        {
+          "type": "checkbox",
+          "id": "payment_terms",
+          "default":true,
+          "label": "Show Payment Terms"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_subscription",
+          "default":true,
+          "label": "Show Subscription Widget"
+        },
+        {
+          "type": "richtext",
+          "id": "subscription_points",
+          "label": "Subscription points",
+          "info":"Add [interval] where the plan needs to be changed."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

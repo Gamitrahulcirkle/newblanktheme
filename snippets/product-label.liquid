@@ -1,0 +1,18 @@
+{%- liquid
+  assign date_created = product.created_at | date: '%s'
+  assign current_time = 'now' | date: '%s'
+  assign day_difference = current_time | minus: date_created | divided_by: 86400
+  assign days_old = settings.new_label_days | plus: 0
+
+  if day_difference < days_old
+    echo '<div class="label new">'
+    echo 'products.product.new' | t
+    echo '</div>'
+  endif
+
+ if product.available == false 
+   echo '<div class="label stockout">'
+    echo 'products.product.out_of_stock' | t
+    echo '</div>'
+  endif
+-%}

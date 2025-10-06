@@ -1,0 +1,43 @@
+{%- form 'product',
+  product,
+  id: product_form_id,
+  class: 'product-action',
+  novalidate: 'novalidate',
+  data-type: 'add-to-cart-form',
+  data-form: 'product-page'
+-%}
+  <div class="product-form__item--submit" {{ block.shopify_attributes }} data-product-form-{{ section.id }}>
+    <input
+      type="hidden"
+      name="id"
+      value="{{ current_variant.id }}"
+    >
+    <button
+      type="submit"
+      name="add"
+      class="btn product-form__cart-submit"
+      aria-haspopup="dialog"
+      data-add-to-cart
+      data-section-id="cart-drawer"
+      {% if current_variant.available == false %}
+        disabled
+      {% endif %}
+    >
+      <span>
+        {%- if current_variant.available -%}
+          {{- 'products.product.add_to_cart' | t -}}
+        {%- else -%}
+          {{- 'products.product.sold_out' | t -}}
+        {%- endif -%}
+      </span>
+    </button>
+  </div>
+  {%- if block.settings.show_dynamic_checkout -%}
+    {{- form | payment_button -}}
+  {%- endif -%}
+  {%- if block.settings.payment_terms -%}
+    <div class="pdp-shop-text text-center flex align-center justify-center">
+      {{ form | payment_terms }}
+    </div>
+  {%- endif -%}
+{%- endform -%}

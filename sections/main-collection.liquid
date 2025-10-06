@@ -1,0 +1,102 @@
+{{ 'tag-sort-filter.css' | asset_url | stylesheet_tag }}
+{% render 'breadcrumb' %}
+<section class="shop spad" data-section-type="main-collection" section-id="{{ section.id }}">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mb-5 tag-filter">
+        {% comment %}
+        {%- if collection.all_tags.size > 0 -%}
+          <ul class="d-flex align-items-center list-unstyled" data-tag-filter-{{ section.id }}>
+            <li>
+              <span>Active:</span>
+            </li>
+            {%- for tag in collection.all_tags -%}
+              <li>
+                {% if current_tags contains tag %}
+                  {{
+                    tag
+                    | link_to_remove_tag: tag
+                    | replace: '<a', '<a class="btn border rounded-pill tag-filter-btn active"'
+                  }}
+                {% else %}
+                  {{ tag | link_to_add_tag: tag | replace: '<a', '<a class="btn border rounded-pill tag-filter-btn"' }}
+                {% endif %}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {% endcomment %}
+      </div>
+      <div class="col-lg-4 mb-5 sort-by">
+        {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
+        <select name="sort_by" class="form-select border rounded-pill py-2" aria-label="Sort options">
+          {%- for option in collection.sort_options -%}
+            <option
+              value="{{ option.value | escape }}"
+              {% if option.value == sort_by %}
+                selected="selected"
+              {% endif %}
+            >
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+        <span id="ProductCount" data-products-count-{{ section.id }} class="ml-3">
+          {% if collection.results_count %}
+            {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
+          {% elsif collection.products_count == collection.all_products_count %}
+            {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+          {% else %}
+            {{
+              'products.facets.product_count'
+              | t: product_count: collection.products_count, count: collection.all_products_count
+            }}
+          {%- endif -%}
+        </span>
+      </div>
+
+      <div class="col-lg-3 col-md-3">
+        {%- render 'facets', results: collection -%}
+      </div>
+      <div class="col-lg-9 col-md-9">
+        <div class="row" data-products-{{ section.id }}>
+          {%- if collection.products_count > 0 -%}
+            {%- paginate collection.products by section.settings.products_per_page -%}
+              {%- for product in collection.products -%}
+                {%- render 'product-card', product: product, section_id: section.id -%}
+              {%- endfor -%}
+              {%- if paginate.pages > 1 -%}
+                {%- render 'pagination', paginate: paginate -%}
+              {%- endif -%}
+            {%- endpaginate -%}
+          {%- else -%}
+            <h2>
+             {{ 'sections.collection_template.empty' | t -}}
+                <br>
+                {{
+                  'sections.collection_template.use_fewer_filters_html'
+                  | t: link: collection.url
+                }}
+            </h2>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Main Collection",
+  "settings": [
+     {
+      "type":"range",
+      "id":"products_per_page",
+      "label":"Pagination limit",
+      "min": 1,
+      "max": 50,
+      "default": 8,
+      "step": 1
+    },
+  ]
+}
+{% endschema %}

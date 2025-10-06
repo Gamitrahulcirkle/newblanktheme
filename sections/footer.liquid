@@ -1,0 +1,123 @@
+<div class="container">
+  <div class="row">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'logo' -%}
+          <div class="col-lg-4 col-md-6 col-sm-7">
+            <div class="footer__about">
+              <div class="footer__logo">
+                {%- render 'logo' -%}
+              </div>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt cilisis.</p>
+              {%- if shop.enabled_payment_types.size > 0 -%}
+                <div class="footer__payment">
+                  {%- for type in shop.enabled_payment_types -%}
+                    <a href="javascript:;"><img src="{{  type | payment_type_img_url }}" alt="footer__payment-{{ forloop.index }}"></a>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- when 'footer-menu' -%}
+          {%- if block.settings['footer-menu'] != blank -%}
+            {%- assign menu = linklists[block.settings['footer-menu']] -%}
+            <div class="col-lg-2 col-md-3 col-sm-5">
+              <div class="footer__widget">
+                <h6>{{- block.settings['footer-menu-title'] | default: menu.title -}}</h6>
+                {%- if menu.links != blank -%}
+                  <ul>
+                    {%- for links in menu.links -%}
+                      <li>
+                        <a href="{{- links.url -}}">{{- links.title -}}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- when 'newsletter' -%}
+          <div class="col-lg-4 col-md-8 col-sm-8">
+            {%- render 'newsletter',
+              section: section,
+              title: block.settings.form_title,
+              show_social_icons: block.settings.show_social_icons
+            -%}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="footer__copyright__text">
+        <p>{{- 'layout.footer.copyright_html' | t -}}</p>
+        <p>
+          &copy; {{ 'now' | date: '%Y' }}, <a href="{{ routes.root_url }}">{{ shop.name | remove: ' Brand' }}</a>. All
+          Rights Reserved
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.footer.name",
+  "tag": "footer",
+  "class": "footer",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Logo"
+        },
+        {
+          "type": "paragraph",
+          "content": "Edit your logo in theme settings [theme settings](/editor?context=theme&category=site%20logo)."
+        }
+      ]
+    },
+    {
+      "type": "footer-menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "footer-menu-title",
+          "label": "Title"
+        },
+        {
+          "type": "link_list",
+          "id":"footer-menu",
+          "label": "Navigationn"
+        }
+      ]
+    },
+    {
+      "type":"newsletter",
+      "name":"Newsletter",
+      "limit": 1,
+      "settings":[
+        {
+          "type": "text",
+          "id": "form_title",
+          "label": "Title",
+          "default":"Subscribe"
+        },
+        {
+          "type": "checkbox",
+          "id":"show_social_icons",
+          "label": "Show Social Icons",
+          "default": true,
+          "info": "To display your social media accounts, link them in your [theme settings](/editor?context=theme&category=social%20media)."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,54 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "logo_8dnhjX": {
+          "type": "logo",
+          "settings": {}
+        },
+        "footer_menu_phbpQL": {
+          "type": "footer-menu",
+          "settings": {
+            "footer-menu-title": "",
+            "footer-menu": "footer"
+          }
+        },
+        "footer_menu_VwDM6h": {
+          "type": "footer-menu",
+          "settings": {
+            "footer-menu-title": "",
+            "footer-menu": "account"
+          }
+        },
+        "newsletter_4f4nyG": {
+          "type": "newsletter",
+          "settings": {
+            "form_title": "NEWSLETTER"
+          }
+        }
+      },
+      "block_order": [
+        "logo_8dnhjX",
+        "footer_menu_phbpQL",
+        "footer_menu_VwDM6h",
+        "newsletter_4f4nyG"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

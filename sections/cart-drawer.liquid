@@ -1,0 +1,105 @@
+<div class="cart-drawer" data-cart-item data-cart-drawer>
+  <div class="cart-header p-2 border-bottom d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fw-bold">{{ 'cart.general.drawer_title' | t }}</h5>
+    <button class="btn-close btn" id="closeCart">X</button>
+  </div>
+  <div class="scroll-wrapper">
+    <div class="cart-items-wrapper">
+     {%- if cart != blank -%}
+      <div class="cart-items">
+        {%- for item in cart.items -%}
+          {%- render 'cart-item', item: item, forloop: forloop -%}
+        {%- endfor -%}
+      </div>
+      {% else %}
+       <h2 class="cart__empty-text">{{ 'cart.general.empty' | t }}</h2>
+     {%- endif -%}
+    </div>
+    {%- if section.settings.enable_upsell -%}
+      <div
+        class="recommendation p-3 cart-drawer-upsell {% if cart != blank %}cart-recommendations{% endif %}"
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ cart.items.first.product.id }}&limit={{ section.settings.product_limit }}"
+      >
+        {%- render 'cart-recommendations', section: section -%}
+      </div>
+    {%- endif -%}
+  </div>
+  <div class="cart-footer-wrapper">
+    <div class="cart-footer p-3 bg-light">
+      <div class="total d-flex justify-content-between align-items-center mb-3">
+        <span class="fw-bold fs-5">Total:</span>
+        <span class="total-amount fw-bold fs-5 text-primary">{{ cart.total_price | money_with_currency }}</span>
+      </div>
+      <button class="btn btn-primary btn-lg rounded-pill w-100 fw-semibold">{{ 'cart.general.checkout' | t }}</button>
+    </div>
+  </div>
+</div>
+
+<div class="cart-overlay"></div>
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "tag":"section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id":"cart_headline",
+      "label": "Headline",
+      "default":"<p>Great Choice! A transformation is coming...</p>"
+    },
+    {
+      "type": "header",
+      "content": "Cart Upsell"
+    },
+    {
+      "type": "text",
+      "id": "upsell_heading",
+      "label": "Upsell Heading",
+      "default":"You May Also Like"
+    },
+    {
+      "type":"checkbox",
+      "id":"enable_upsell",
+      "label": "Enable Upsell",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_recommendation",
+      "label": "Show Cart Recommendation",
+      "default": true,
+      "info": "If 'Show Cart Recommendation' is enabled, products will be shown based on the first cart item; otherwise, the selected products will be displayed"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "label": "Product limit",
+      "default": 4
+    },
+    {
+      "type": "product_list",
+      "id": "cart_product_list",
+      "label": "Products",
+      "info": "If blank it will use Shopify default recommendations."
+    },
+    {
+      "type": "header",
+      "content": "Cart Footer"
+    },
+    {
+      "type":"richtext",
+      "id":"footer_text",
+      "label": "Footer Text",
+      "default":"<p>90-Day Satisfaction Guarantee</p>"
+    },
+    {
+      "type": "html",
+      "id": "icon",
+      "label": "Icon"
+    }
+  ]
+}
+{% endschema %}

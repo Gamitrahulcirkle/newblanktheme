@@ -1,0 +1,80 @@
+{%- if product.media.size > 1 -%}
+  <div class="product__details__pic__left product__thumb nice-scroll" data-product-thumbnails>
+    {%- for media in matching_media -%}
+      {%- case media.media_type -%}
+        {%- when 'video', 'external_video' -%}
+          {%- assign image_class = 'video--tag' -%}
+        {%- when 'model' -%}
+          {%- assign image_class = 'model--tag' -%}
+        {%- else -%}
+          {%- assign image_class = 'image--tag' -%}
+      {%- endcase -%}
+      <a class="pt{% if forloop.first %} active{% endif %}" href="javascript:void(0);" data-target="{{ forloop.index }}" data-img="{{ media.id }}">
+        {{
+          media.preview_image
+          | image_url: width: 1946
+          | image_tag:
+            class: image_class,
+            loading: lazy,
+            sizes: sizes,
+            widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946'
+        }}
+      </a>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+<div class="product__details__slider__content" data-product-main-media>
+  <div class="{%- if product.media.size > 1 -%}product__details__pic__slider owl-carousel{%- endif -%}">
+    {%- if product.media.size > 0 -%}
+      {%- for media in matching_media -%}
+        {%- case media.media_type -%}
+          {%- when 'image' -%}
+           <a href="{{ media.preview_image | image_url }}" data-lightbox="product-gallery" data-title="{{ product.title }}">
+              <img
+                srcset="
+                  {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                  {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                  {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+                  {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+                  {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+                  {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+                  {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
+                  {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
+                  {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+                "
+                sizes="(min-width: 750px) calc(100vw - 22rem), 1100px"
+                src="{{ media.preview_image | image_url: width: 1445 }}"
+                alt="{{ media.alt | escape }}"
+                loading="lazy"
+                width="1100"
+                height="{{ 1100 | divided_by: media.preview_image.aspect_ratio | ceil }}"
+                class="product__big__img"
+                data-img="{{ media.id }}"
+              >
+            </a>
+          {%- when 'external_video' -%}
+            {%- assign video_class = 'js-' | append: media.host -%}
+            {%- if media.host == 'youtube' -%}
+              {{
+                media
+                | external_video_url: autoplay: true, loop: loop, playlist: media.external_id
+                | external_video_tag: class: video_class, loading: 'lazy'
+              }}
+            {%- else -%}
+              {{
+                media
+                | external_video_url: autoplay: true, loop: loop
+                | external_video_tag: class: video_class, loading: 'lazy'
+              }}
+            {%- endif -%}
+          {%- when 'video' -%}
+            {{ media | media_tag: image_size: '2048x', autoplay: true, loop: loop, controls: true, preload: 'none' }}
+          {%- when 'model' -%}
+            {{ media | media_tag: image_size: '2048x', toggleable: true }}
+        {%- endcase -%}
+      {%- endfor -%}
+    {%- else -%}
+      {{- 'image' | placeholder_svg_tag -}}
+    {%- endif -%}
+  </div>
+</div>

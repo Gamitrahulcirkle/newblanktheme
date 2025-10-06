@@ -1,0 +1,63 @@
+{%- unless template == 'index' or template == '404' or template == 'list-collections' -%}
+  {%- assign t = template | split: '.' | first -%}
+
+  <div class="breadcrumb-option">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="breadcrumb__links">
+            <a href="/"><i class="fa fa-home"></i> Home</a>
+            {%- case t -%}
+              {%- when 'page' -%}
+                <li>
+                  <a href="{{ page.url }}" class="btn active">{{ page.title }}</a>
+                </li>
+              {%- when 'product' -%}
+                {%- if collection.url -%}
+                  {{- collection.title | link_to: collection.url -}}
+                {%- endif -%}
+              
+                <span>{{ product.title }}</span>
+
+              {%- when 'collection' and collection.handle -%}
+                {%- if current_tags -%}
+                  {{- collection.title | link_to: collection.url -}}
+
+                  {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+                  <span>{{ current_tags | join: ' + ' }}</span>
+
+                {%- else -%}
+                  <span>{{ collection.title }}</span>
+                {%- endif -%}
+              {%- when 'blog' -%}
+                {%- if current_tags -%}
+                  <li>
+                    {{ blog.title | link_to: blog.url }}
+                  </li>
+                  <li>
+                    {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+                    <span>{{ current_tags | join: ' + ' }}</span>
+                  </li>
+                {%- else -%}
+                  <li>
+                    <span>{{ blog.title }}</span>
+                  </li>
+                {%- endif -%}
+              {%- when 'article' -%}
+                <li>
+                  {{ blog.title | link_to: blog.url }}
+                </li>
+                <li>
+                  <span>{{ article.title }}</span>
+                </li>
+              {%- else -%}
+                <li>
+                  <span>{{ page_title | split: ':' | first }}</span>
+                </li>
+            {%- endcase -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endunless -%}

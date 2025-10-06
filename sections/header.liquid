@@ -1,0 +1,97 @@
+<header class="header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-3 col-lg-2">
+        <div class="header__logo">
+          {%- render 'logo' -%}
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-7">
+        {%- if section.settings.menu != blank -%}
+          <nav class="header__menu">
+            <ul>
+              {%- for link in section.settings.menu.links -%}
+              <li class="{%- if link.active -%}active{%- endif -%}">
+                <a href="{{- link.url -}}">{{- link.title -}}</a>
+                {% if link.links != blank %}
+                  <ul class="dropdown">
+                    {%- for childlink in link.links -%}
+                      <li>
+                        <a href="{{- childlink.url -}}">
+                          {{- childlink.title -}}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {% endif %}
+              </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endif -%}
+      </div>
+      <div class="col-lg-3">
+        <div class="header__right">
+          <div class="header__right__auth">
+            {%- if shop.customer_accounts_enabled -%}
+             <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}">Login</a>
+            {%- endif -%}
+            <a href="#">Login</a>
+          </div>
+          <ul class="header__right__widget">
+            <li><span class="icon_search search-switch"></span></li>
+            <li>
+              <a href="#"
+                ><span class="icon_heart_alt"></span>
+                <div class="tip">2</div>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0);" id="openCart"
+                ><span class="icon_bag_alt"></span>
+                <div class="tip">{{ cart.item_count }}</div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="canvas__open">
+      <i class="fa fa-bars"></i>
+    </div>
+  </div>
+</header>
+
+<!-- SEO Enhancemet - Search functionality -->
+{%- if request.page_type == 'index' -%}
+  {% assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "disabled_on": {
+    "templates": ["password"],
+  },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

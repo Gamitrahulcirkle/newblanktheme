@@ -1,0 +1,8 @@
+{%- unless product.selling_plan_groups.size > 0 -%}
+  <p class="product-single__price" data-price-{{ section.id }} {{- block.shopify_attributes -}}>
+    {%- if current_variant.compare_at_price > current_variant.price -%}
+      <s id="ComparePrice">{{- current_variant.compare_at_price | money -}}</s>
+    {%- endif %}
+    <span class="price__sale">{{- current_variant.price | money -}}</span>
+  </p>
+{%- endunless -%}

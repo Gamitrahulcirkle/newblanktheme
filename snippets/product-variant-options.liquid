@@ -1,0 +1,38 @@
+{%- liquid
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+{%- for value in option.values -%}
+  {%- liquid
+    assign option_disabled = true
+    if value.available
+      assign option_disabled = false
+    endif
+  -%}
+
+  {%- capture input_id -%}
+    {{ section.id }}-{{ option.position }}-{{ forloop.index0 -}}
+  {%- endcapture -%}
+
+  {%- capture input_name -%}
+    {{ option.name }}-{{ option.position }}
+  {%- endcapture -%}
+
+  {%- capture input_dataset -%}
+    data-product-url="{{ product.url }}"
+    data-option-value-id="{{ value.id }}"
+  {%- endcapture -%}
+
+  {%
+    render 'swatch-input',
+    id: input_id,
+    name: input_name,
+    value: value | escape,
+    swatch: value.swatch,
+    product_form_id: product_form_id,
+    checked: value.selected,
+    visually_disabled: option_disabled,
+    picker_type: picker_type,
+    additional_props: input_dataset
+  %}
+{%- endfor -%}

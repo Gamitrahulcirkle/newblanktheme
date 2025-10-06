@@ -1,0 +1,116 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero_banner_tGWwFK": {
+      "type": "hero-banner",
+      "blocks": {
+        "category_BxK4e8": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/category-1.jpg",
+            "heading": "Women’s fashion",
+            "paragraph": "<p>Sitamet, consectetur adipiscing elit, sed do eiusmod tempor incidid-unt labore edolore magna aliquapendisse ultrices gravida.</p>",
+            "button_url": "shopify://collections/women-s",
+            "button_text": "Shop now"
+          }
+        },
+        "category_Qnt9b9": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/category-3.jpg",
+            "heading": "Denim fashion",
+            "paragraph": "<p>273 items</p>",
+            "button_url": "shopify://collections/denim",
+            "button_text": "Shop now"
+          }
+        },
+        "category_rbLBUC": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/category-2.jpg",
+            "heading": "Men’s fashion",
+            "paragraph": "<p>358 items</p>",
+            "button_url": "shopify://collections/men-s",
+            "button_text": "Shop now"
+          }
+        },
+        "category_T73mfK": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/category-4.jpg",
+            "heading": "Cosmetics",
+            "paragraph": "<p>159 items</p>",
+            "button_url": "#",
+            "button_text": "Shop now"
+          }
+        },
+        "category_MthhFi": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/category-5.jpg",
+            "heading": "Accessories",
+            "paragraph": "<p>792 items</p>",
+            "button_url": "#",
+            "button_text": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "category_BxK4e8",
+        "category_Qnt9b9",
+        "category_rbLBUC",
+        "category_T73mfK",
+        "category_MthhFi"
+      ],
+      "settings": {}
+    },
+    "collection_tabs_z4w9RE": {
+      "type": "collection-tabs",
+      "settings": {
+        "heading": "New product",
+        "collection_list": [
+          "women-s",
+          "men-s",
+          "denim"
+        ],
+        "product_limit": 12
+      }
+    },
+    "slider_banner_MGigHi": {
+      "type": "slider-banner",
+      "settings": {
+        "image": "shopify://shop_images/banner-1.webp"
+      }
+    },
+    "trend_iceyqR": {
+      "type": "trend",
+      "settings": {}
+    },
+    "countdown_banner_6NkkyN": {
+      "type": "countdown-banner",
+      "settings": {
+        "image": "shopify://shop_images/discount.webp"
+      }
+    },
+    "services_Feacn8": {
+      "type": "services",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_banner_tGWwFK",
+    "collection_tabs_z4w9RE",
+    "slider_banner_MGigHi",
+    "trend_iceyqR",
+    "countdown_banner_6NkkyN",
+    "services_Feacn8"
+  ]
+}

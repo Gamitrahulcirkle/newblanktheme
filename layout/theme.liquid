@@ -1,0 +1,103 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="theme-color" content="">
+   
+    <!-- Preconnect CDN resources -->
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://shop.app" crossorigin>
+    <link rel="preconnect" href="https://monorail-edge.shopifysvc.com">
+    {%- unless settings.body_font.system? and settings.body_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+
+    {%- if canonical_url != blank -%}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" type="image/png">
+    {%- endif -%}
+
+    {%- capture seo_title -%}
+      {%- assign escaped_page_title = page_title | escape -%}
+      {%- unless escaped_page_title contains shop.name -%}
+        {{ shop.name }}:&nbsp;
+      {%- endunless -%}
+      {%- if request.page_type == 'search' and search.performed == true -%}
+        {{ 'search.general.title' | t: count: search.results_count }}: {{ 'search.general.results_with_count' | t: terms: search.terms, count: search.results_count }}
+      {%- else -%}
+        {{ page_title }}
+      {%- endif -%}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 -%}
+      &ndash; Page {{ current_page }}
+      {%- endif -%}
+    {%- endcapture -%}
+    
+    {%- style -%}
+      {{ settings.body_font | font_face }}
+      
+      html,body,h1,h2,h3,h4,h5,h6 {
+        font-family: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }} !important;
+      }
+    {%- endstyle -%}
+    
+    <title>{{ seo_title | strip }}</title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'meta-tags' %}
+
+    {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+    {{ 'font-awesome.min.css' | asset_url | stylesheet_tag }}
+    {{ 'elegant-icons.css' | asset_url | stylesheet_tag }}
+    {{ 'jquery-ui.min.css' | asset_url | stylesheet_tag }}
+    {% comment %}
+      {{ 'magnific-popup.css' | asset_url | stylesheet_tag }}
+    {% endcomment %}
+    {{ 'owl.carousel.min.css' | asset_url | stylesheet_tag }}
+    {{ 'slicknav.min.css' | asset_url | stylesheet_tag }}
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+
+    {{ 'jquery-3.3.1.min.js' | asset_url | script_tag }}
+    {{ 'api.jquery.js' | shopify_asset_url | script_tag }}
+    {{ 'bootstrap.min.js' | asset_url | script_tag }}
+    {% comment %}
+      <script src="{{ 'jquery.magnific-popup.min.js' | asset_url }}" defer="defer" type="text/javascript"></script>
+    {% endcomment %}
+    <script src="{{ 'jquery-ui.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'mixitup.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'jquery.countdown.min.js' | asset_url }}" async></script>
+    <script src="{{ 'jquery.slicknav.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'owl.carousel.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'jquery.nicescroll.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'main.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'custom.js' | asset_url }}" defer="defer"></script>
+
+    {%- render 'js-variables' -%}
+  </head>
+
+  <body class="template-{{ template | split: '.' | first }}">
+    {%- sections 'header-group' -%}
+
+    <main role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    <!-- quick view -->
+    <div class="modal fade" id="content_quickview"></div>
+    
+    {%- sections 'footer-group' -%}
+    {%- unless template contains 'cart' -%}
+      {%- section 'cart-drawer' -%}
+    {%- endunless -%}
+  </body>
+</html>

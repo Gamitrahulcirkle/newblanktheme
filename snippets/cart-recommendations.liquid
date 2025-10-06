@@ -1,0 +1,57 @@
+{%- liquid
+  if recommendations.performed and recommendations.products_count > 0 and cart != blank
+    assign product_lists = recommendations.products | where: 'available', true
+  elsif section.settings.cart_product_list != blank
+    assign product_lists = section.settings.cart_product_list | where: 'available', true
+  endif
+
+  assign limit = section.settings.product_limit
+  assign ct = 0
+-%}
+{%- if product_lists != blank -%}
+  
+  {%- if section.settings.upsell_heading != blank -%}
+    <h6 class="mb-3 fw-bold">{{ section.settings.upsell_heading }}</h6>
+  {%- endif -%}
+  
+  <div class="owl-carousel recommended-items">
+    {%- for upsell_pro in product_lists -%}
+      
+      {% liquid
+        assign variant = upsell_pro.selected_or_first_available_variant
+        assign is_in_cart = cart | item_count_for_variant: variant.id
+
+        if is_in_cart > 0
+          continue
+        endif
+
+        assign ct = ct | plus: 1
+      %}
+
+      <div class="recommended-item">
+        <div class="recommended-item-img">
+          {%- if upsell_pro.featured_image != blank -%}
+            <img
+              src="{{ upsell_pro.featured_image | image_url: width: 80 }}"
+              alt="{{ upsell_pro.featured_image.alt | escape }}"
+              loading="lazy"
+              width="80"
+              height="{{ 80 | divided_by: upsell_pro.featured_image.aspect_ratio | ceil }}"
+              class="rounded shadow-sm"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+        <div class="recommended-item-content">
+          <p class="mb-1 mt-2 fw-semibold">{{- upsell_pro.title | escape | truncatewords: 4 -}}</p>
+          <p class="price mb-2">{{ variant.price | money }}</p>
+          <button class="btn btn-sm btn-outline-primary rounded-pill w-100">
+            {{ 'products.product.add_to_cart' | t }}
+          </button>
+        </div>
+      </div>
+      {%- if ct == limit -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

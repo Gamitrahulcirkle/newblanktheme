@@ -1,0 +1,127 @@
+{%- liquid
+  assign group_ids = current_variant.selling_plan_allocations | map: 'selling_plan_group_id' | uniq
+-%}
+{% if product.selling_plan_groups.size > 0 %}
+  {% if current_variant.selling_plan_allocations.size > 0 %}
+    <div class="subscription-container" data-product-subscription>
+      {% unless product.requires_selling_plan %}
+        <div class="subscription-option" data-sub-plan>
+          <input
+            type="radio"
+            name="purchaseOption_{{ section.id }}_{{ current_variant.id }}"
+            {% if current_variant.available == false %}
+              disabled
+            {% endif %}
+            id="{{ section.id }}_one_time_purchase"
+            data-radio-type="one_time_purchase"
+            data-variant-price="{{ current_variant.price }}"
+            data-variant-compare-at-price="{{ current_variant.compare_at_price }}"
+            class="subscribe-check-input"
+            checked
+          >
+          <label for="{{ section.id }}_one_time_purchase" class="option-label">
+            <div class="option-content">
+              <div class="subscription-header">
+                <span>One-time purchase</span>
+                <div class="price" data-plan-price>
+                  {{- current_variant.price | money -}}
+                  {%- if current_variant.compare_at_price > current_variant.price -%}
+                    <cp>{{- current_variant.compare_at_price | money -}}</cp>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </label>
+        </div>
+      {% endunless %}
+      {% for group_id in group_ids %}
+        {% liquid
+          assign group = product | map: 'selling_plan_groups' | where: 'id', group_id | first
+          assign allocations = current_variant | map: 'selling_plan_allocations' | where: 'selling_plan_group_id', group_id
+
+          if forloop.first
+            assign first_selling_plan_group = true
+          else
+            assign first_selling_plan_group = false
+          endif
+        %}
+        <div class="subscription-option" data-sub-plan>
+          <input
+            type="radio"
+            id="subscribe-{{ forloop.index }}"
+            name="purchaseOption_{{ section.id }}_{{ current_variant.id }}"
+            data-radio-type="selling_plan"
+            class="subscribe-check-input"
+            {% if product.requires_selling_plan %}
+              checked
+            {% endif %}
+          >
+          {%- liquid
+            assign current_plan_name = product.selling_plan_groups[0].selling_plans[0].name | split: 'every' | last | prepend: '<span data-plan-name>' | append: '</span>'
+            assign current_plan_price = current_variant.selling_plan_allocations[0].price
+            assign current_plan_compare_at_price = current_variant.selling_plan_allocations[0].compare_at_price
+            assign percent_off = current_plan_compare_at_price | minus: current_plan_price | times: 100.0 | divided_by: current_plan_compare_at_price | round | append: '%'
+          -%}
+          <label for="subscribe-{{ forloop.index }}" class="option-label">
+            <div class="option-content">
+              <div class="subscription-header">
+               {% comment %}<span>{{ group.name }}</span>{% endcomment %}
+                <span data-savings-percentage>
+                  Subscribe &
+                  <span class="highlight" data-text="{{- 'products.product.percentage_savings' | t -}}">
+                    {{- 'products.product.percentage_savings' | t: percantage: percent_off -}}
+                  </span>
+                </span>
+             
+                <div class="price" data-plan-price>
+                  {{- current_plan_price | money -}}
+                  {%- if current_plan_compare_at_price > current_plan_price -%}
+                    <cp>{{- current_plan_compare_at_price | money -}}</cp>
+                  {%- endif -%}
+                </div>
+              </div>
+
+              <div class="delivery-selector">
+                <select id="delivery-frequency" name="product-selling_plan">
+                  {% for allocation in allocations %}
+                    {%- liquid
+                      if forloop.first and product.requires_selling_plan and first_selling_plan_group
+                        assign plan_checked = 'checked'
+                      else
+                        assign plan_checked = null
+                      endif
+
+                      assign allocationPrice = allocation.price
+                      assign allocationComparedAtPrice = allocation.compare_at_price
+                    -%}
+
+                    <option
+                      value="{{ allocation.selling_plan.id }}"
+                      data-selling-plan-id="{{ allocation.selling_plan.id }}"
+                      data-selling-plan-group-id="{{ section.id }}_{{ group_id }}_{{ variant.id }}"
+                      data-selling-plan-adjustment="{{ allocation.selling_plan.price_adjustments.size }}"
+                      data-variant-price="{{ allocationPrice }}"
+                      data-variant-compare-at-price="{{ allocationComparedAtPrice }}"
+                      data-selling-plan-name="{{ allocation.selling_plan.name | split: 'every' | last }}"
+                      {% if plan_checked %}
+                        selected
+                      {% endif %}
+                    >
+                      {{- allocation.selling_plan.name -}}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <ul class="benefits-list">
+                <li>Never run out - delivered to your door every 1 month</li>
+                <li>Modify, pause, or cancel any time</li>
+                <li>Save on shipping</li>
+              </ul>
+            </div>
+          </label>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endif %}
